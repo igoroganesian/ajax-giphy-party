@@ -7,7 +7,7 @@ const API_KEY = "MhAodEJIJxQMxW9XqxKjyXfNYdLoOIym";
 "?q=hilarious&api_key=MhAodEJIJxQMxW9XqxKjyXfNYdLoOIym"
 
 const $input = $("#input");
-const $gifContainer = $("#container");
+let $gifContainer = $(".container");
 
 $("#form")
 const $submitButton = $("#submit-button");
@@ -19,25 +19,16 @@ const $submitButton = $("#submit-button");
 /** get results from giphy */
 
 async function getGiphyImages() {
-const searchTerm = $input.val(); //change to function results
+const searchTerm = "cats"; /*$input.val() */ //change to function results
 
   let giphyResults = await axios.get(
     GIPHY_URL, { params: {q: searchTerm, api_key: API_KEY}}
     );
 
-  return giphyResults;
+  return giphyResults.data.data[0].images.original.url;
   //returns object with data property containing ~50 gifs; make
   //function to access random gif (0-49)
 }
-
-function pickRandomGifIndex() {
-  const randomIndex = (Math.floor(Math.random() * 50));
-  return randomIndex;
-  //eventually giphyResults.data[randomIndex];
-}
-
-
-
 
 
 
@@ -45,15 +36,25 @@ function pickRandomGifIndex() {
 /** on submit, get info and add to ??? */
 
 async function getSubmitInfo(evt) {
-  evt.preventDefault();
+  // evt.preventDefault();
 
-  const urls = getGiphyImages();
+  const urls = await getGiphyImages();
 
-  addImage(urls);
+  addGifs(urls);
 }
 
 /** add image to site */
 
-// function addImage() {
+function addGifs(urls) {
+  console.log("addGifs = ", (urls));
+const $image = $("<img>");
+$image.attr("src", urls);
+$gifContainer.append($image);
+console.log($gifContainer);
+}
 
-// }
+function pickRandomGifIndex() {
+  const randomIndex = (Math.floor(Math.random() * 50));
+  return randomIndex;
+  //eventually giphyResults.data[randomIndex];
+}
